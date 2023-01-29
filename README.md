@@ -14,6 +14,6 @@ Boosts your twitch experience to the next level by providing you with a lot of u
 
 ## Installation
 
-Only available for chrome currently
+Only available for chromium-based browsers currently
 
 [Link](https://bashvlas.com/blog/install-chrome-extension-in-developer-mode/)

@@ -10,7 +10,6 @@
   "icons": {
     "150": "/img/icon.png"
   },
-  "default_locale": "en",
   "author": "Kappador",
   "homepage_url": "https://kappa.host",
   "name": "Twitch Tools",

@@ -6,7 +6,7 @@
       "150": "/img/icon.png"
     }
   },
-  "permissions": ["cookies", "storage"],
+  "permissions": ["cookies", "storage", "webRequest"],
   "icons": {
     "150": "/img/icon.png"
   },
@@ -17,6 +17,7 @@
   "manifest_version": 3,
   "description": "Boosts your twitch experience to the next level by providing you with a lot of useful features.",
   "host_permissions": ["*://*.twitch.tv/"],
+  "devtools_page": "/devtools/devtools.html",
   "content_scripts": [
     {
       "matches": ["*://*.twitch.tv/*"],

@@ -1,1 +1,82 @@
-// twitch tools network interceptor
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Twitch Tools</title>
+    <link rel="stylesheet" href="panel.css" />
+    <link rel="stylesheet" href="stole.css" />
+
+    <link
+      href="//db.onlinewebfonts.com/c/6228016f2b172c06410f3a2356d33f6c?family=Roobert-Regular"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <h1>Twitch Tools API Debugger</h1>
+    <div class="tabbar">
+      <div class="tabitem active" data-tab="0">
+        <img hidden />
+        <p>GQL</p>
+      </div>
+      <div class="tabitem" data-tab="1">
+        <img hidden />
+        <p>Spade</p>
+      </div>
+      <div class="tabitem" data-tab="2">
+        <img hidden />
+        <p>Usher</p>
+      </div>
+      <div class="tabitem" data-tab="3">
+        <img hidden />
+        <p>IRC</p>
+      </div>
+      <div class="tabitem" data-tab="4">
+        <img hidden />
+        <p>Pubsub</p>
+      </div>
+    </div>
+
+    <div class="tabcontent active" data-name="GQL">
+      <h2>Settings</h2>
+      <input
+        id="block"
+        class="pink-btn"
+        style="background-color: red"
+        type="button"
+        value="Block"
+      />
+      <input
+        id="collect"
+        class="pink-btn"
+        style="background-color: rgb(0, 200, 0)"
+        type="button"
+        value="Collect"
+      />
+      <div class="divider"></div>
+      <h2>Requests</h2>
+      <div class="padder">
+        <input id="lookup" class="coolTextbox" placeholder="query" />
+      </div>
+      <div id="gql_requests" class="settingsfeatures">
+        <div id="gql_request" class="settingspane gql_request" data-operation="viewercard">
+          <button>ViewerCard</button>
+          <div class="content"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabcontent" data-name="Spade">
+    </div>
+
+    <div class="tabcontent" data-name="Current">
+    </div>
+
+    <div class="tabcontent" data-name="History"></div>
+
+    <div class="tabcontent" data-name="Settings">
+    </div>
+
+    <script src="panel.js"></script>
+  </body>
+</html>

@@ -127,132 +127,132 @@ async function performTokenSwitch(token) {
 
     var interestingCookies = [];
     cookies.forEach((cookie) => {
-      switch (cookie.name) {
-        case "auth-token":
-          interestingCookies.push(cookie);
-          break;
-        case "twilight-user":
-          interestingCookies.push(cookie);
-          break;
-        case "login":
-          interestingCookies.push(cookie);
-          break;
-        case "name":
-          interestingCookies.push(cookie);
-          break;
-        case "persistent":
-          interestingCookies.push(cookie);
-          break;
-        case "spare_key":
-          interestingCookies.push(cookie);
-          break;
-        case "bits_sudo":
-          interestingCookies.push(cookie);
-          break;
-        default:
-          break;
-      }
+        switch (cookie.name) {
+            case "auth-token":
+                interestingCookies.push(cookie);
+                break;
+            case "twilight-user":
+                interestingCookies.push(cookie);
+                break;
+            case "login":
+                interestingCookies.push(cookie);
+                break;
+            case "name":
+                interestingCookies.push(cookie);
+                break;
+            case "persistent":
+                interestingCookies.push(cookie);
+                break;
+            case "spare_key":
+                interestingCookies.push(cookie);
+                break;
+            case "bits_sudo":
+                interestingCookies.push(cookie);
+                break;
+            default:
+                break;
+        }
     });
 
     if (interestingCookies.length < 7) {
-      var randomString =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
+        var randomString =
+            Math.random().toString(36).substring(2, 15) +
+            Math.random().toString(36).substring(2, 15);
 
-      interestingCookies = [
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: true,
-          name: "spare_key",
-          path: "/",
-          sameSite: "unspecified",
-          secure: true,
-          session: true,
-          storeId: "0",
-          value: "",
-        },
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: true,
-          name: "bits_sudo",
-          path: "/",
-          sameSite: "unspecified",
-          secure: true,
-          session: false,
-          storeId: "0",
-          value: "",
-        },
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: true,
-          name: "persistent",
-          path: "/",
-          sameSite: "unspecified",
-          secure: true,
-          session: false,
-          storeId: "0",
-          value: "0::" + randomString,
-        },
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: false,
-          name: "login",
-          path: "/",
-          sameSite: "no_restriction",
-          secure: true,
-          session: false,
-          storeId: "0",
-          value: "",
-        },
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: false,
-          name: "name",
-          path: "/",
-          sameSite: "unspecified",
-          secure: false,
-          session: false,
-          storeId: "0",
-          value: "",
-        },
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: false,
-          name: "twilight-user",
-          path: "/",
-          sameSite: "no_restriction",
-          secure: true,
-          session: false,
-          storeId: "0",
-          value:
-            "{%22authToken%22:%22ax9hzuja828h9ihqojnq2joni005ic%22%2C%22displayName%22:%22yufakung%22%2C%22id%22:%22632492700%22%2C%22login%22:%22yufakung%22%2C%22roles%22:{%22isStaff%22:false}%2C%22version%22:2}",
-        },
-        {
-          domain: ".twitch.tv",
-          expirationDate: 1755440604,
-          hostOnly: false,
-          httpOnly: false,
-          name: "auth-token",
-          path: "/",
-          sameSite: "no_restriction",
-          secure: true,
-          session: false,
-          storeId: "0",
-          value: "",
-        },
-      ];
+        interestingCookies = [
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: true,
+                name: "spare_key",
+                path: "/",
+                sameSite: "unspecified",
+                secure: true,
+                session: true,
+                storeId: "0",
+                value: "",
+            },
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: true,
+                name: "bits_sudo",
+                path: "/",
+                sameSite: "unspecified",
+                secure: true,
+                session: false,
+                storeId: "0",
+                value: "",
+            },
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: true,
+                name: "persistent",
+                path: "/",
+                sameSite: "unspecified",
+                secure: true,
+                session: false,
+                storeId: "0",
+                value: "0::" + randomString,
+            },
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: false,
+                name: "login",
+                path: "/",
+                sameSite: "no_restriction",
+                secure: true,
+                session: false,
+                storeId: "0",
+                value: "",
+            },
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: false,
+                name: "name",
+                path: "/",
+                sameSite: "unspecified",
+                secure: false,
+                session: false,
+                storeId: "0",
+                value: "",
+            },
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: false,
+                name: "twilight-user",
+                path: "/",
+                sameSite: "no_restriction",
+                secure: true,
+                session: false,
+                storeId: "0",
+                value:
+                    "{%22authToken%22:%22ax9hzuja828h9ihqojnq2joni005ic%22%2C%22displayName%22:%22yufakung%22%2C%22id%22:%22632492700%22%2C%22login%22:%22yufakung%22%2C%22roles%22:{%22isStaff%22:false}%2C%22version%22:2}",
+            },
+            {
+                domain: ".twitch.tv",
+                expirationDate: 1755440604,
+                hostOnly: false,
+                httpOnly: false,
+                name: "auth-token",
+                path: "/",
+                sameSite: "no_restriction",
+                secure: true,
+                session: false,
+                storeId: "0",
+                value: "",
+            },
+        ];
     }
 
     // add all interestingCookies to
@@ -260,33 +260,33 @@ async function performTokenSwitch(token) {
 
     // change that real quick lmfao
     cookies.forEach((cookie) => {
-      switch (cookie.name) {
-        case "auth-token":
-          cookie.value = token;
-          break;
-        case "login":
-          cookie.value = info.login;
-          break;
-        case "name":
-          cookie.value = info.displayName;
-          break;
-        case "persistent":
-          let persistent = decodeURIComponent(
-            cookies.find((c) => c.name == "persistent").value
-          ).split("::");
-          persistent[0] = info.id;
-          cookie.value = persistent.join("::");
-          break;
-        default:
-          break;
-      }
+        switch (cookie.name) {
+            case "auth-token":
+                cookie.value = token;
+                break;
+            case "login":
+                cookie.value = info.login;
+                break;
+            case "name":
+                cookie.value = info.displayName;
+                break;
+            case "persistent":
+                let persistent = decodeURIComponent(
+                    cookies.find((c) => c.name == "persistent").value
+                ).split("::");
+                persistent[0] = info.id;
+                cookie.value = persistent.join("::");
+                break;
+            default:
+                break;
+        }
     });
 
     // now to the annoying part...
     let twilightUserCookie = JSON.parse(
-      decodeURIComponent(
-        interestingCookies.find((c) => c.name == "twilight-user").value
-      )
+        decodeURIComponent(
+            interestingCookies.find((c) => c.name == "twilight-user").value
+        )
     );
 
     twilightUserCookie.displayName = info.displayName;
@@ -295,23 +295,23 @@ async function performTokenSwitch(token) {
     twilightUserCookie.id = info.id;
 
     twilightUserCookie = encodeURIComponent(
-      JSON.stringify(twilightUserCookie)
+        JSON.stringify(twilightUserCookie)
     )
-      .replace(/%7B/g, "{")
-      .replace(/%7D/g, "}")
-      .replace(/%3A/g, ":");
+        .replace(/%7B/g, "{")
+        .replace(/%7D/g, "}")
+        .replace(/%3A/g, ":");
 
     cookies.find((c) => c.name == "twilight-user").value =
-      twilightUserCookie;
+        twilightUserCookie;
 
     setCookies(cookies);
     setTimeout(() => {
-      chrome.tabs.query(
-        { active: true, currentWindow: true },
-        function (tabs) {
-          chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
-        }
-      );
+        chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs) {
+                chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
+            }
+        );
     }, 1000);
 }
 
@@ -376,7 +376,7 @@ async function getInformationFromName(value) {
             "extensions": {
                 "persistedQuery": {
                     "version": 1,
-                    "sha256Hash": "20e51233313878f971daa32dfc039b2e2183822e62c13f47c48448d5d5e4f5e9"
+                    "sha256Hash": "823772cac91efa0a24f86a80463f37f0377cb216d7ce57a4ab90b61d1e01de8b"
                 }
             }
         }
@@ -476,6 +476,12 @@ async function checkTypeOfValue(value) {
 
     return "invalid";
 
+}
+
+async function copyTokenToClipboard() {
+    const cookies = await getCookies("twitch.tv");
+    const token = cookies.filter(cookie => cookie.name === "auth-token")[0].value ?? "no token found";
+    navigator.clipboard.writeText(token);
 }
 
 function updateUserProfileCard(data) {
@@ -605,6 +611,11 @@ document.addEventListener("DOMContentLoaded", function () {
     login.addEventListener("click", function () {
         performTokenSwitch(new_token.value);
         new_token.value = "";
+    });
+
+    const copy_token = document.getElementById("copy_token");
+    copy_token.addEventListener("click", function () {
+        copyTokenToClipboard();
     });
 
 });

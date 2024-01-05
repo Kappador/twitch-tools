@@ -417,6 +417,25 @@ async function getInformationFromName(value) {
     return "invalid";
 }
 
+async function getNameThroughToken(token) {
+    let information = await postDataToGQL([
+        {
+            "operationName": "Settings_ProfilePage_AccountInfoSettings",
+            "variables": {},
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": "60a54ebcbd29e095db489ed6268f33d5fe5ed1d4fa3176668d8091587ae81779"
+                }
+            }
+        }
+    ], token);
+
+    if (!information[0].data.currentUser) return "invalid";
+
+    return information[0].data.currentUser.login;
+}
+
 async function checkTypeOfValue(value) {
     let username = await postDataToGQL([
         {
@@ -527,6 +546,56 @@ function updateUserProfileCard(data) {
 
 }
 
+async function updateCurrentUser() {
+    const cookies = await getCookies("twitch.tv");
+    const token = cookies.filter(cookie => cookie.name === "auth-token")[0].value ?? "no token found";
+    const name = await getNameThroughToken(token);
+    
+    if (name === "invalid") return;
+    const data = await getInformationFromName(name);
+    a
+    let pfp = document.getElementById("c_lookup_pfp");
+    let banner = document.getElementById("c_lookup_panel");
+    let name_obj = document.getElementById("c_lookup_name");
+    let creation_date = document.getElementById("c_lookup_creationdate");
+    let followers = document.getElementById("c_lookup_followers");
+    let badger = document.getElementById("c_badger");
+    let live = document.getElementById("c_lookup_live");
+    let color = document.getElementById("c_color_user");
+    let id = document.getElementById("c_id_user");
+
+    banner.style.backgroundImage = "url(" + data.banner + ")";
+    pfp.src = data.pfp;
+    name_obj.innerHTML = data.displayName;
+    name_obj.href = "https://twitch.tv/" + data.login;
+    creation_date.innerHTML = "Created on " + new Date(data.createdAt).toLocaleDateString();
+    color.style.borderTop = "1px solid " + data.hex;
+    id.innerHTML = data.id;
+
+    // format followers
+    let followers_str = data.followers.toString();
+    let followers_formatted = Intl.NumberFormat('en', { notation: 'compact' }).format(followers_str);
+
+
+    followers.innerHTML = "Has " + followers_formatted + " followers";
+
+
+    if (data.partner || data.affiliate) {
+        badger.hidden = false;
+        badger.src = data.partner ? "../img/partner.png" : "../img/affiliate.png";
+    } else {
+        badger.hidden = true;
+    }
+
+    if (data.live) {
+        live.hidden = false;
+    } else
+        live.hidden = true;
+
+
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const github = document.getElementById("github");
     github.addEventListener("click", function () {
@@ -559,6 +628,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             document.getElementsByClassName("tabcontent")[tabId].classList.add("active");
+            if (this.getAttribute("data-tab") == 2) {
+                updateCurrentUser();
+            }
         });
     }
 

@@ -553,7 +553,7 @@ async function updateCurrentUser() {
     
     if (name === "invalid") return;
     const data = await getInformationFromName(name);
-    a
+    
     let pfp = document.getElementById("c_lookup_pfp");
     let banner = document.getElementById("c_lookup_panel");
     let name_obj = document.getElementById("c_lookup_name");

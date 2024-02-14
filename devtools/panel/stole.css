@@ -311,6 +311,7 @@ h1 {
 }
 .padder {
   padding-bottom: 1rem;
+  display: flex;
 }
 .coolTextbox {
   max-width: 20rem;
@@ -546,4 +547,74 @@ h1 {
   font-size: 0.8rem !important;
   font-weight: 600 !important;
   text-transform: uppercase !important;
+}
+
+.body {
+  display: flex;
+}
+
+.left {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.right {
+  flex: 1;
+  max-width: 50%;
+}
+
+pre {
+  overflow: scroll;
+  height: 400px;
+  border: 1px solid #ffffff1a;
+  overflow-wrap: break-word;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.string {
+  color: #ce916a;
+}
+.number {
+  color: #b5c078;
+}
+.boolean {
+  color: #368cd6;
+}
+.null {
+  color: #368cd6;
+}
+.key {
+  color: #68cdfe;
+}
+
+.testbutton {
+  opacity: 0;
+  transition: all 1s;
+}
+.testbutton.in {
+  opacity: 1;
+}
+.settings_operation {
+  margin-bottom: 1rem;
+  width: 20rem;
+}
+#gql_clear_query {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+.footer {
+  border-top: 1px solid #ffffff1a;
+  position: fixed; 
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  padding: 5px;
+  background-color: #181818;
 }

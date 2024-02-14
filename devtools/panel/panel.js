@@ -54,10 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const clearDupes = document.getElementById("clearDupes");
     clearDupes.addEventListener("click", () => {
 
-        const requests = gql_requests;
         const map = new Map();
 
-        for (let [key, req] of requests) {
+        for (let [key, req] of gql_requests) {
             const opName = req.request.body.operationName;
             if (!map.has(opName)) {
                 map.set(opName, {
@@ -67,13 +66,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        requests.clear();
+        gql_requests.clear();
 
         const div = document.getElementById("gql_requests");
         div.innerHTML = "";
 
         for (let [key, req] of map) {
-            requests.set(req.id, req.req);
+            gql_requests.set(req.id, req.req);
             populateRequests("gql", req.req);
         }
     });

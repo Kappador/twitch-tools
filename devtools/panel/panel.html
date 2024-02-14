@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Twitch Tools</title>
+    <link rel="stylesheet" href="panel.css" />
+    <link rel="stylesheet" href="stole.css" />
+
+    <link
+      href="https://db.onlinewebfonts.com/c/6228016f2b172c06410f3a2356d33f6c?family=Roobert-Regular"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <h1>API Debugger</h1>
+    <div class="tabbar">
+      <div class="tabitem active" data-tab="0">
+        <img hidden />
+        <p>GQL</p>
+      </div>
+    </div>
+
+    <div class="tabcontent active" data-name="GQL">
+      <h2>Settings</h2>
+
+      <div class="settings_operation">
+        <div class="setting">
+          <div class="f">
+            <h4>Manager</h4>
+            <p>Account Manager for your oauth tokens</p>
+          </div>
+          <div class="s">
+            <label class="switch">
+              <input
+                class="settings_input"
+                type="checkbox"
+                data-target="manager_tab"
+              />
+              <span><img class="lookup_pfp" src="../img/checkmark.svg" /></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <h2>Requests</h2>
+
+      <div id="gql_requests" class="settingsfeatures"></div>
+      <br>
+      <div class="footer">
+        <div class="padder">
+          <input
+            id="gql_clear"
+            class="pink-btn"
+            style="background-color: rgb(90, 0, 200)"
+            type="button"
+            value="Clear"
+          />
+          <input
+            id="export"
+            class="pink-btn"
+            style="background-color: rgb(90, 0, 200)"
+            type="button"
+            value="Export All"
+          />
+          <input id="gql_query" class="coolTextbox" placeholder="query" />
+          <button id="gql_clear_query">❌</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="panel.js"></script>
+  </body>
+</html>

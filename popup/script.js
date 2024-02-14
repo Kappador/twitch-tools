@@ -672,6 +672,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const lookup_refresh = document.getElementById("lookup_refresh");
     lookup_refresh.addEventListener("click", async function () {
+
         chrome.storage.sync.get("last_user", async function (items) {
             let result = await performInfoLookup(items.last_user.login);
             updateUserProfileCard(result);
@@ -681,6 +682,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const login = document.getElementById("login");
     const new_token = document.getElementById("new_token");
     login.addEventListener("click", function () {
+        if (!confirm("Please use the provided 'Logout' from the 'Current' tab.\nDONT LOG OUT THROUGH TWITCH, YOU WILL DEAUTHORIZE THE TOKEN")) return;
         performTokenSwitch(new_token.value);
         new_token.value = "";
     });

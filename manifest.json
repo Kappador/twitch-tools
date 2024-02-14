@@ -17,5 +17,9 @@
   "manifest_version": 3,
   "description": "Boosts your twitch experience to the next level by providing you with a lot of useful features.",
   "devtools_page": "/devtools/devtools.html",
-  "host_permissions": ["*://*/*"]
+  "host_permissions": ["*://*/*"],
+  "content_scripts": [
+    { "all_frames": true, "matches": ["<all_urls>"], "js": ["foreground.js"] }
+  ],
+  "options_page": "/popup/popup.html"
 }

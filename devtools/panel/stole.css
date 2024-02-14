@@ -12,7 +12,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 1px;
+  width: 0px;
   opacity: 0;
 }
 
@@ -119,7 +119,12 @@ h1 {
   display: block;
 }
 
-.settingspane button {
+.settingsfeatures {
+  overflow: scroll;
+  max-height: 46.5rem;
+}
+
+.settingspane>button {
   min-height: 3rem;
   display: block;
   width: 100%;
@@ -133,11 +138,13 @@ h1 {
   -webkit-box-pack: center !important;
   justify-content: center !important;
   overflow: hidden !important;
-  padding: 2rem 1rem 2rem 2rem !important;
+  padding-left: 1rem;
+  padding-top: .5rem;
+  padding-bottom: .3rem;
   margin: 0;
 }
 
-.settingspane button:hover {
+.settingspane>button:hover {
   background-color: #ffffff33;
 }
 
@@ -599,7 +606,7 @@ pre {
   margin-bottom: 1rem;
   width: 20rem;
 }
-#gql_clear_query {
+.xout {
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
@@ -610,7 +617,7 @@ pre {
 
 .footer {
   border-top: 1px solid #ffffff1a;
-  position: fixed; 
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;

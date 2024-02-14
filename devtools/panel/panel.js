@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 tab.classList.remove("active");
             }
             this.classList.add("active");
-
             const tabId = this.getAttribute("data-tab");
 
             const tabContents = document.getElementsByClassName("tabcontent");
@@ -42,12 +41,45 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const query_clear = document.getElementById("gql_clear_query");
+    const query_clear = document.getElementById("clear_query");
     query_clear.addEventListener("click", clearQuery);
 
-    const gql_clear = document.getElementById("gql_clear");
-    gql_clear.addEventListener("click", () => {
-        gql_requests.clear();
+    const clear = document.getElementById("clear");
+    clear.addEventListener("click", () => {
+        gql_requests.clear()
+        const requests = document.getElementById("gql_requests");
+        requests.innerHTML = "";
+    });
+
+    const clearDupes = document.getElementById("clearDupes");
+    clearDupes.addEventListener("click", () => {
+
+        const requests = gql_requests;
+        const map = new Map();
+
+        for (let [key, req] of requests) {
+            const opName = req.request.body.operationName;
+            if (!map.has(opName)) {
+                map.set(opName, {
+                    id: key,
+                    req: req,
+                });
+            }
+        }
+
+        requests.clear();
+
+        const div = document.getElementById("gql_requests");
+        div.innerHTML = "";
+
+        for (let [key, req] of map) {
+            requests.set(req.id, req.req);
+            populateRequests("gql", req.req);
+        }
+    });
+
+    clear.addEventListener("click", () => {
+        gql_requests.clear()
         const requests = document.getElementById("gql_requests");
         requests.innerHTML = "";
     });
@@ -59,6 +91,34 @@ async function getTab() {
     return tabs[0].url;
 }
 
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+}
+
+function copyTextToClipboard(text) {
+    fallbackCopyTextToClipboard(text);
+}
+
 function generateHTML(data) {
     const { id, request, response } = data;
 
@@ -68,12 +128,37 @@ function generateHTML(data) {
     req.classList.add("gql_request");
 
     const button = document.createElement("button");
-    button.textContent = data.request.body.operationName;
     button.classList.add("testbutton")
+    button.style.width = "100%";
 
     button.addEventListener("click", () => {
         req.children[1].classList.contains("active") ? req.children[1].classList.remove("active") : req.children[1].classList.add("active");
     });
+
+    const kys = document.createElement("div");
+    kys.classList.add("body");
+
+    const opName = document.createElement("p");
+    opName.textContent = request.body.operationName;
+
+    const deleteOp = document.createElement("button");
+    deleteOp.textContent = "❌";
+    deleteOp.classList.add("xout");
+    deleteOp.style.marginTop = "-0.1rem";
+
+    deleteOp.addEventListener("click", () => {
+        gql_requests.delete(id);
+
+        const requests = document.getElementById("gql_requests");
+        const requer = document.getElementById("gql_request_" + id);
+        requests.removeChild(requer);
+    });
+
+    deleteOp.classList.add("right");
+
+    kys.appendChild(deleteOp);
+    kys.appendChild(opName);
+    button.appendChild(kys);
 
     const content = document.createElement("div");
     content.classList.add("content");
@@ -92,6 +177,35 @@ function generateHTML(data) {
     jsonLeft.id = "json_left_" + id;
     jsonLeft.innerHTML = syntaxHighlight(JSON.stringify(request.body, undefined, 4));
 
+    const copyRequest = document.createElement('input');
+    copyRequest.type = "button";
+    copyRequest.style.backgroundColor = "rgb(90, 0, 200)";
+    copyRequest.classList.add("pink-btn", "copy-code-button");
+    copyRequest.value = "Copy";
+    copyRequest.addEventListener('click', () => {
+        copyTextToClipboard(JSON.stringify(request.body, undefined, 4));
+    });
+
+    const copyTypeRequest = document.createElement("input");
+    copyTypeRequest.type = "button";
+    copyTypeRequest.style.backgroundColor = "rgb(90, 0, 200)";
+    copyTypeRequest.classList.add("pink-btn", "copy-code-button");
+    copyTypeRequest.value = "Copy Type";
+    copyTypeRequest.addEventListener('click', () => {
+        const text = convertGqlRequestToJson(request.body);
+        console.log(text)
+    });
+
+    left.appendChild(h4Left);
+    left.appendChild(jsonLeft);
+    left.appendChild(copyRequest);
+    left.appendChild(copyTypeRequest);
+
+    body.appendChild(left);
+
+
+    left.style.minWidth = "50%";
+
     const right = document.createElement("div");
     right.classList.add("right");
 
@@ -103,48 +217,35 @@ function generateHTML(data) {
     jsonRight.id = "json_right_" + id;
     jsonRight.innerHTML = syntaxHighlight(JSON.stringify(response.body, undefined, 4));
 
-    left.appendChild(h4Left);
-    left.appendChild(jsonLeft);
+
+    const copyResponse = document.createElement("input");
+    copyResponse.type = "button";
+    copyResponse.style.backgroundColor = "rgb(90, 0, 200)";
+    copyResponse.classList.add("pink-btn", "copy-code-button");
+    copyResponse.value = "Copy";
+    copyResponse.addEventListener('click', () => {
+        copyTextToClipboard(JSON.stringify(response.body, undefined, 4));
+    });
+
+    const copyTypeResponse = document.createElement("input");
+    copyTypeResponse.type = "button";
+    copyTypeResponse.style.backgroundColor = "rgb(90, 0, 200)";
+    copyTypeResponse.classList.add("pink-btn", "copy-code-button");
+    copyTypeResponse.value = "Copy Type";
+    copyTypeResponse.addEventListener('click', () => {
+        const text = convertGqlResponseToJson(response.body);
+        console.log(text)
+    });
+
 
     right.appendChild(h4Right);
     right.appendChild(jsonRight);
+    right.appendChild(copyResponse);
+    right.appendChild(copyTypeResponse);
 
-
-    body.appendChild(left);
     body.appendChild(right);
 
-    const deleteOp = document.createElement("input");
-    deleteOp.type = "button";
-    deleteOp.id = "delete_button_" + id;
-    deleteOp.style.backgroundColor = "rgb(90, 0, 200)";
-    deleteOp.classList.add("pink-btn");
-    deleteOp.value = "Delete";
-
-    deleteOp.addEventListener("click", () => {
-        gql_requests.delete(id);
-        const requests = document.getElementById("gql_requests");
-        const request = document.getElementById("gql_request_" + id);
-        requests.removeChild(request);
-    });
-
-    const copyOp = document.createElement("input");
-    copyOp.type = "button";
-    copyOp.id = "copy_button_" + id;
-    copyOp.style.backgroundColor = "rgb(90, 0, 200)";
-    copyOp.classList.add("pink-btn");
-    copyOp.value = "Copy";
-
-    copyOp.addEventListener("click", () => {
-        const req = gql_requests.get(id);
-        if (!req) return;
-
-        const copy = JSON.stringify(req, undefined, 4);
-        navigator.clipboard.writeText(copy);
-    });
-
     content.appendChild(body);
-    content.appendChild(deleteOp);
-    content.appendChild(copyOp);
 
     req.appendChild(button);
     req.appendChild(content);
@@ -153,8 +254,85 @@ function generateHTML(data) {
 }
 
 function clearQuery() {
-    const gql_query = document.getElementById("gql_query");
-    gql_query.value = "";
+    const query = document.getElementById("query");
+    query.value = "";
+}
+
+function convertGqlRequestToJson(jsonResponse) {
+
+    function determineTypes(obj) {
+        let convertedObj = {};
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    convertedObj[key] = determineTypes(obj[key]);
+                } else {
+                    convertedObj[key] = typeof obj[key];
+                }
+            }
+        }
+        return convertedObj;
+    }
+
+    let convertedVariables = determineTypes(jsonResponse.variables);
+
+    let convertedResponse = {
+        operationName: jsonResponse.operationName,
+        variables: convertedVariables,
+        extensions: jsonResponse.extensions
+    };
+
+    let text = JSON.stringify(convertedResponse, undefined, 4);
+    text = text.replaceAll("\": \"string\"", "\": string");
+    text = text.replaceAll("\": \"number\"", "\": number");
+    text = text.replaceAll("\": \"boolean\"", "\": boolean");
+    text = text.replaceAll("\": \"object\"", "\": object");
+    text = text.replaceAll("\": \"null\"", "\": null");
+
+    text = `export type ${jsonResponse.operationName}Request = ${text};`
+
+    copyTextToClipboard(text);
+    return text;
+}
+
+function convertGqlResponseToJson(jsonResponse) {
+
+    function determineTypes(obj) {
+        let convertedObj = {};
+        for (let key in obj) {
+            if (key.startsWith("__")) {
+                convertedObj[key] = obj[key];
+                continue;
+            }
+            if (obj.hasOwnProperty(key)) {
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    convertedObj[key] = determineTypes(obj[key]);
+                } else {
+                    convertedObj[key] = typeof obj[key];
+                }
+            }
+        }
+        return convertedObj;
+    }
+
+    let convertedVariables = determineTypes(jsonResponse.data);
+
+    let convertedResponse = {
+        data: convertedVariables,
+        extensions: jsonResponse.extensions
+    };
+
+    let text = JSON.stringify(convertedResponse, undefined, 4);
+    text = text.replaceAll("\": \"string\"", "\": string");
+    text = text.replaceAll("\": \"number\"", "\": number");
+    text = text.replaceAll("\": \"boolean\"", "\": boolean");
+    text = text.replaceAll("\": \"object\"", "\": object");
+    text = text.replaceAll("\": \"null\"", "\": null");
+
+    text = `export type ${jsonResponse.extensions.operationName}Response = ${text};`
+
+    copyTextToClipboard(text);
+    return text;
 }
 
 function syntaxHighlight(json) {
@@ -179,17 +357,16 @@ function syntaxHighlight(json) {
 // hider
 setInterval(() => {
 
-    const gql_query = document.getElementById("gql_query");
-    const query = gql_query.value;
-    hideSelected(query);
+    const query = document.getElementById("query");
+    hideSelected(query.value);
 
 }, 10);
 
 function hideSelected(select) {
-    const gql_requests = document.getElementById("gql_requests");
-    const requests = gql_requests.getElementsByClassName("gql_request");
+    const gReqs = document.getElementById("gql_requests");
+    const gRequests = gReqs.getElementsByClassName("gql_request");
 
-    for (let request of requests) {
+    for (let request of gRequests) {
         const operation = request.getElementsByTagName("button")[0].textContent;
 
         if (select === "") {
@@ -202,40 +379,46 @@ function hideSelected(select) {
     }
 }
 
+function populateRequests(data) {
+    const requests = document.getElementById("gql_requests");
+    const id = uuidv4();
+
+    gql_requests.set(id, data)
+
+    const html = generateHTML({ id, ...data });
+    requests.appendChild(html);
+    requests.insertBefore(html, requests.firstChild).focus();
+
+    html.firstChild.classList.add("in");
+}
+
 /**
  * @type {Map<string, { request: any, response: any }>}
  */
 const gql_requests = new Map();
-const spade_requests = new Map();
 
 const emitter = new EventEmitter();
 
 emitter.on("gql", (data) => {
-    const id = uuidv4();
-    gql_requests.set(id, data);
-    const html = generateHTML({ id, ...data });
-
-    const requests = document.getElementById("gql_requests");
-    requests.insertBefore(html, requests.firstChild).focus();
-
-    html.firstChild.classList.add("in");
+    populateRequests(data);
 });
 
 chrome.devtools.network.onRequestFinished.addListener(async request => {
     request.getContent((body) => {
-        if (request.request && (request.request.method != "POST" || request.request.url != "https://gql.twitch.tv/gql")) return;
+        if (request.request && request.request.method != "POST") return;
+        if (request.request.url === "https://gql.twitch.tv/gql") {
+            const responseBody = JSON.parse(body);
+            const requestBody = JSON.parse(request.request.postData.text);
 
-        const responseBody = JSON.parse(body);
-        const requestBody = JSON.parse(request.request.postData.text);
+            for (let i = 0; i < requestBody.length; i++) {
+                const req = requestBody[i];
+                const res = responseBody[i];
 
-        for (let i = 0; i < requestBody.length; i++) {
-            const req = requestBody[i];
-            const res = responseBody[i];
-
-            emitter.emit("gql", {
-                request: { body: req },
-                response: { body: res }
-            });
+                emitter.emit("gql", {
+                    request: { body: req },
+                    response: { body: res }
+                });
+            }
         }
     });
 });

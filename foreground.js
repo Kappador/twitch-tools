@@ -1,5 +1,6 @@
 if (window.location.href.includes("twitch.tv")) {
 
+    //#region Chatter Count
     function getLoginFromUrl() {
         const login = window.location.href.split("/")[3];
         if (login) {
@@ -32,6 +33,9 @@ if (window.location.href.includes("twitch.tv")) {
                 }
             }
         }).then(data => {
+            if (!data.data.user || !data.data.user.channel) {
+                return -1;
+            }
             return data.data.user.channel.chatters.count;
         })
 
@@ -43,13 +47,6 @@ if (window.location.href.includes("twitch.tv")) {
 
         if (window.location.href.includes('clips.twitch.tv')) return;
         let query = document.querySelector('p[data-a-target="animated-channel-viewers-count"]');
-        let viewCount = query.textContent;
-        if (!viewCount || isNaN(parseInt(viewCount))) {
-            viewCount = query.firstChild.textContent;
-        }
-
-        viewCount = viewCount.replace(/,/g, '');
-
         if (!query) {
             return;
         }
@@ -69,8 +66,6 @@ if (window.location.href.includes("twitch.tv")) {
             return;
         }
         element.textContent = `  [${count.toLocaleString()}]`;
-
-        addPercent(parseInt(viewCount), count);
     }
 
     function addPercent(viewCount, chatterCount) {
@@ -110,15 +105,51 @@ if (window.location.href.includes("twitch.tv")) {
         element.style.color = `rgb(${matrix[index]})`;
     }
 
-    setInterval(() => {
+    function getViewCount() {
+        if (window.location.href.includes('clips.twitch.tv')) return;
+        let query = document.querySelector('p[data-a-target="animated-channel-viewers-count"]');
+        if (!query) return -1;
+        const child = query.firstChild;
+        if (!child) return -1;
+
+        let count = child.textContent;
+        count = count.replace(/,/g, '');
+        return parseInt(count);
+    }
+
+    function checkIfAllExists() {
+        return new Promise((resolve, reject) => {
+
+            const login = getLoginFromUrl();
+            const chars = /^[0-9a-zA-Z_]+$/;
+            if (chars.test(login)) {
+                resolve(true);
+            } else {
+                resolve(false)
+            }
+
+        });
+    }
+
+    setInterval(async () => {
+
+        const allThere = await checkIfAllExists();
+        if (!allThere) return;
+
         const login = getLoginFromUrl();
         getChatterCount(login).then(count => {
-            console.log(`Chatter count for ${login}: ${count}`);
+            if (count === -1) return;
             createChatterCount(count);
+            const vc = getViewCount();
+            if (vc === -1) return;
+            addPercent(vc, count);
         }).catch(err => {
             console.error(err);
         });
     }, 1000);
+    //#endregion
 
+    //#region pubsub scrapping
 
+    //#endregion
 }

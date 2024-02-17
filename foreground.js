@@ -6,7 +6,7 @@ if (window.location.href.includes("twitch.tv")) {
         if (login) {
             return login;
         }
-        throw new Error("No login found in URL");
+        return "";
     }
 
     function postGql(query) {
@@ -119,20 +119,23 @@ if (window.location.href.includes("twitch.tv")) {
 
     function checkIfAllExists() {
         return new Promise((resolve, reject) => {
-
             const login = getLoginFromUrl();
+            if (login === "") return resolve(false);
             const chars = /^[0-9a-zA-Z_]+$/;
             if (chars.test(login)) {
                 resolve(true);
             } else {
                 resolve(false)
             }
-
         });
     }
 
     setInterval(async () => {
-
+        return;
+        if (window.location.href.includes('clips.twitch.tv')) return;
+        if (!window.location.href.includes('https://www.twitch.tv')) return;
+        if (window.location.href.includes('https://twitch.tv')) return;
+        if (window.location.href.includes('twitch.tv/directory')) return;
         const allThere = await checkIfAllExists();
         if (!allThere) return;
 
@@ -149,7 +152,86 @@ if (window.location.href.includes("twitch.tv")) {
     }, 1000);
     //#endregion
 
-    //#region pubsub scrapping
+    //#region directoy chatter count
 
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                const event = new CustomEvent('new-element-added', { detail: mutation.addedNodes });
+                document.dispatchEvent(event);
+            }
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('new-element-added', function (event) {
+        const element = event.detail[0];
+        if (!element) return;
+        if (!element.children || element.children.length === 0) return;
+        if (element.children[0].nodeType != Node.ELEMENT_NODE || element.children[0].tagName != 'A') return;
+
+        const login = element.children[0].getAttribute('href').split('/')[1];
+
+        const viewerCount = element.getElementsByClassName('tw-media-card-stat')[0].textContent.split(' ')[0];
+        let parsedViewCount = 0;
+        if (viewerCount.includes('.')) {
+            parsedViewCount = parseInt(viewerCount.split('.')[0]) * 1000 + parseInt(viewerCount.split('.')[1]) * 100;
+        } else {
+            parsedViewCount = parseInt(viewerCount.replace(/K/g, '000'));
+        }
+
+        getChatterCount(login).then(chatter => {
+            if (chatter === -1) return;
+
+            const check = document.getElementById("chatter-viewer-percentage_" + login);
+            if (check) {
+                check.parentNode.removeChild(check);
+            }
+
+            const percentageElement = document.createElement('div');
+            percentageElement.className = 'Layout-sc-1xcs6mc-0 duHgVC';
+            percentageElement.id = "chatter-viewer-percentage_" + login;
+            percentageElement.style.right = '0';
+            percentageElement.style.marginRight = '.4rem';
+
+            const percent = (chatter / parsedViewCount * 100).toFixed(2);
+            let ind = 0;
+            if (percent >= 25) ind = 1;
+            if (percent >= 50) ind = 2;
+            if (percent >= 65) ind = 3;
+            if (percent >= 80) ind = 4;
+            if (percent >= 90) ind = 5;
+            if (percent >= 100) ind = 6;
+            let matrix = [
+                [150, 0, 0, 0.8],
+                [255, 0, 0, 0.8],
+                [255, 165, 0, 0.8],
+                [255, 255, 0, 0.8],
+                [144, 238, 144, 0.8],
+                [0, 255, 0, 0.8],
+                [100, 216, 230, 0.8]
+            ];
+
+
+            const percentage = document.createElement('div');
+            percentage.style.backgroundColor = `rgba(${matrix[ind]})`;
+            percentage.className = 'ScMediaCardStatWrapper-sc-anph5i-0 jRUNHm tw-media-card-stat';
+            percentage.textContent = `${percent}%`;
+
+            percentageElement.appendChild(percentage);
+
+            const cardWrapper = element.getElementsByClassName('switcher-preview-card__wrapper')[0];
+            const actualThingWeWant = cardWrapper.children[0];
+
+            actualThingWeWant.insertBefore(percentageElement, actualThingWeWant.children[2]);
+
+        }).catch(err => {
+            console.error(err);
+        });
+    });
     //#endregion
 }

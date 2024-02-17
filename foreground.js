@@ -131,7 +131,6 @@ if (window.location.href.includes("twitch.tv")) {
     }
 
     setInterval(async () => {
-        return;
         if (window.location.href.includes('clips.twitch.tv')) return;
         if (!window.location.href.includes('https://www.twitch.tv')) return;
         if (window.location.href.includes('https://twitch.tv')) return;

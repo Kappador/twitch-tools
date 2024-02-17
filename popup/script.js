@@ -553,7 +553,6 @@ async function updateCurrentUser() {
     
     if (name === "invalid") return;
     const data = await getInformationFromName(name);
-    a
     let pfp = document.getElementById("c_lookup_pfp");
     let banner = document.getElementById("c_lookup_panel");
     let name_obj = document.getElementById("c_lookup_name");
@@ -720,3 +719,10 @@ document.body.onload = function () {
         }
     });
 }
+
+const test  = () => {
+    fetch("https://raw.githubusercontent.com/Kappador/twitch-tools/master/manifest.json").then(response => response.json()).then(data => {
+        console.log(data);
+    });
+}
+test();

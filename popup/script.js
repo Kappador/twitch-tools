@@ -719,10 +719,3 @@ document.body.onload = function () {
         }
     });
 }
-
-const test  = () => {
-    fetch("https://raw.githubusercontent.com/Kappador/twitch-tools/master/manifest.json").then(response => response.json()).then(data => {
-        console.log(data);
-    });
-}
-test();

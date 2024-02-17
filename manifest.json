@@ -6,19 +6,23 @@
       "150": "/img/icon.png"
     }
   },
-  "permissions": ["cookies", "storage", "tabs"],
+  "permissions": ["cookies", "storage"],
   "icons": {
     "150": "/img/icon.png"
   },
   "author": "Kappador",
   "homepage_url": "https://kappa.host",
   "name": "Twitch Tools",
-  "version": "1.1",
+  "version": "1.2",
   "manifest_version": 3,
   "description": "Boosts your twitch experience to the next level by providing you with a lot of useful features.",
-  "host_permissions": ["*://*/*"],
+  "host_permissions": ["*://*.twitch.tv/*"],
   "content_scripts": [
-    { "all_frames": true, "matches": ["<all_urls>"], "js": ["foreground.js"] }
+    {
+      "all_frames": true,
+      "matches": ["*://*.twitch.tv/*"],
+      "js": ["foreground.js"]
+    }
   ],
   "options_page": "/popup/popup.html"
 }
